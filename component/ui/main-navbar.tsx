@@ -90,7 +90,7 @@ if (!isValidPath) {
             className={cn(
               "flex items-center gap-2 rounded text-lg p-2 transition-colors",
               route.active
-                ? "bg-slate-900 text-white"
+                ? "bg-[#a38adf] text-white"
                 : "text-slate-600 text-sm hover:text-primary hover:bg-slate-200"
             )}
           >
