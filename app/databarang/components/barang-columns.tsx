@@ -1,6 +1,6 @@
 "use client"
 
-import {ColumnDef} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 
 export type BarangColumn = {
   id: number
@@ -21,12 +21,14 @@ export type BarangColumn = {
 }
 
 export const columns: ColumnDef<BarangColumn>[] = [
-  
-    {
+
+  {
+    id: "kode",
     accessorKey: "kode",
     header: "Kode",
   },
   {
+    id: "nama",
     accessorKey: "nama",
     header: "Nama Barang",
   },
@@ -56,7 +58,7 @@ export const columns: ColumnDef<BarangColumn>[] = [
     id: "varian",
     header: "Varian",
     cell: ({ row }) => {
-      
+
       return row.original.varianList || `${row.original.varianCount} varian`;
     },
   },
@@ -66,7 +68,8 @@ export const columns: ColumnDef<BarangColumn>[] = [
     cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString("id-ID"),
   },
   {
-   id: "actions",
-  cell: ({ row }) => null,}
-  
+    id: "actions",
+    cell: ({ row }) => null,
+  }
+
 ]

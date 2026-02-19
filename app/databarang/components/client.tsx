@@ -62,7 +62,7 @@ export function BarangClient({ data }: BarangClientProps) {
           title={`Barang Tersedia (${data.length})`}
           description="Kelola stok, harga, dan varian barang"
         />
-        <Button className="bg-[#a38adf]" onClick={() => { setEditData(null); setModalOpen(true); }}>
+        <Button className="bg-[#a38adf] hover:bg-[#8b5bff]" onClick={() => { setEditData(null); setModalOpen(true); }}>
           <Plus className="mr-2 h-4 w-4" />
           Tambah Barang
         </Button>

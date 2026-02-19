@@ -153,7 +153,7 @@ useEffect(() => {
                     <div>
                         <div className="flex justify-between items-center mb-3">
                             <Label>Varian / Warna</Label>
-                            <Button className="bg-[#a38adf]" type="button" onClick={() => append({ warna: "", stok: 0 })} size="sm">
+                            <Button className="bg-[#a38adf] hover:bg-[#8b5bff]" type="button" onClick={() => append({ warna: "", stok: 0 })} size="sm">
                                 <Plus className="w-4 h-4 mr-1" /> Tambah Varian
                             </Button>
                         </div>
@@ -182,10 +182,10 @@ useEffect(() => {
                         ))}
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="outline" onClick={onClose}>
+                        <Button type="button" className="hover:bg-[#8b5bff] hover:text-white" variant="outline" onClick={onClose}>
                             Batal
                         </Button>
-                        <Button className="bg-[#a38adf]" type="submit" disabled={isSubmitting}>
+                        <Button className="bg-[#a38adf] hover:bg-[#8b5bff]" type="submit" disabled={isSubmitting}>
                             {isSubmitting ? "Menyimpan..." : initialData?.id ? "Update" : "Simpan Baru"}
                         </Button>
                     </DialogFooter>
