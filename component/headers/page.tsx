@@ -6,7 +6,7 @@ export default function Headers() {
 
     return (        <>
             <div
-                className="bg-[#baa9d7] text-center text-black py-4 font-bold text-4xl">
+                className="bg-[#8b5bff]/70 text-center text-white py-4 font-bold text-4xl">
                 Kasir Online
                 <div className="mt-4">
                 <MainNav className="rounded max-w-7xl mx-auto bg-stone-100 flex justify-between" />

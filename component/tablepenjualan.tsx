@@ -23,7 +23,7 @@ export default function TablePenjualan({
       <h3 className="text-gray-500 text-xs font-bold mb-2">Data Penjualan</h3>
       <div className="mt-2 overflow-x-auto max-h-[400px]">
         <table className="min-w-full text-xs">
-          <thead className="bg-[#baa9d7] text-white sticky top-0">
+          <thead className="bg-[#8b5bff]/70 text-white sticky top-0">
             <tr>
               <th className="p-2 border">#</th>
               <th className="p-2 border">Kode Pesanan</th>
