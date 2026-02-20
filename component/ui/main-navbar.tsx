@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { Flag, Settings, Package, LogOut, ShoppingBasket, Ban, Store } from "lucide-react";
+import { Flag, Settings, Package, LogOut, ShoppingBasket, Ban, Store, AlignEndHorizontal } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
@@ -34,6 +34,12 @@ export function MainNav({
     icon: Flag,
   },
   {
+    href: `/grafik`,
+    label: "Grafik",
+    active: pathname === `/grafik`,
+    icon: AlignEndHorizontal,
+  },
+  {
     href: `/belumbayar`,
     label: "Belum Bayar",
     active: pathname === `/belumbayar`,
@@ -62,7 +68,7 @@ if (!isValidPath) {
   return null;
 }
   return (
-    <nav className={cn("flex items-center", className)}>
+    <nav className={cn("flex items-center text-xs", className)}>
       {routes.map((route) => {
         const Icon = route.icon;
         const isLogout = route.onClick !== undefined;
@@ -73,8 +79,8 @@ if (!isValidPath) {
               key={route.label}
               onClick={route.onClick}
               className={cn(
-                "flex items-center gap-2 rounded text-sm p-2 transition-colors",
-                "text-slate-600 hover:text-red-600 hover:bg-red-50"
+                "flex items-center gap-2 rounded p-2 transition-colors",
+                "text-slate-600 hover:text-red-600 hover:bg-red-100"
               )}
             >
               <Icon className="w-5 h-5" />
@@ -88,7 +94,7 @@ if (!isValidPath) {
             key={route.href}
             href={route.href}
             className={cn(
-              "flex items-center gap-2 rounded text-lg p-2 transition-colors",
+              "flex items-center gap-2 rounded text-xs p-2 transition-colors",
               route.active
                 ? "bg-[#a38adf] text-white"
                 : "text-slate-600 text-sm hover:text-primary hover:bg-slate-200"

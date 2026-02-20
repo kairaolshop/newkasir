@@ -85,7 +85,7 @@ const totalLaba = useMemo(() =>
         </div>
 
         {/* Filter */}
-        <div className=" text-sm p-6 bg-gray-50 flex flex-wrap gap-6 items-end border-b">
+        <div className=" text-sm p-6 bg-gray-50 flex flex-wrap justify-center gap-6 items-end border-b">
           <div>
             <label className="block text-sm font-medium mb-1">Mode Filter</label>
             <select
@@ -132,10 +132,7 @@ const totalLaba = useMemo(() =>
                 </option>
               ))}
             </select>
-          </div>
-          <Link href="/penghasilan">
-          <button className="bg-[#8b5bff]/50 cursor-pointer hover:bg-[#8b5bff] text-white rounded px-4 py-2.5 ">kembali</button>
-          </Link>
+          </div>          
         </div>
         
 
