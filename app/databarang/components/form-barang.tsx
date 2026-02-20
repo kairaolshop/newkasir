@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { createBarang } from "@/app/actions/barang";
+import { createBarang, updateBarang } from "@/app/actions/barang";
 
 // Zod schema (validasi)
 const varianSchema = z.object({
@@ -52,44 +52,43 @@ export function FormBarang({ open, onClose, initialData, onSuccess }: FormBarang
     });
 
     const { fields, append, remove, replace } = useFieldArray({
-  control: form.control,
-  name: "variants",
-});
-
-useEffect(() => {
-  if (!open) return;
-
-  if (initialData) {
-    const mappedVariants = initialData.variants?.map((v: any) => ({
-      warna: v.warna,
-      stok: Number(v.stok),
-    })) ?? [{warna:"", stok: 0}];
-
-    console.log("mappedVariants:", mappedVariants);
-
-    form.reset({
-      kode: initialData.kode,
-      nama: initialData.nama,
-      hargaJual: initialData.hargaJual,
-      hargaBeli: initialData.hargaBeli,
-      variants: mappedVariants,
+        control: form.control,
+        name: "variants",
     });
 
-    replace(mappedVariants); 
-  } else {
-    const empty = [{ warna: "", stok: 0 }];
+    useEffect(() => {
+        if (!open) return;
 
-    form.reset({
-      kode: "",
-      nama: "",
-      hargaJual: 0,
-      hargaBeli: 0,
-      variants: empty,
-    });
+        if (initialData) {
+            const mappedVariants = initialData.variants?.map((v: any) => ({
+                id: v.id,
+                warna: v.warna,
+                stok: Number(v.stok),
+            })) ?? [{ warna: "", stok: 0 }];
 
-    replace(empty);
-  }
-}, [open, initialData, replace, form]);
+            form.reset({
+                kode: initialData.kode || "",
+                nama: initialData.nama || "",
+                hargaJual: initialData.hargaJual || 0,
+                hargaBeli: initialData.hargaBeli || 0,
+                variants: mappedVariants,
+            });
+
+            replace(mappedVariants);
+        } else {
+            const empty = [{ warna: "", stok: 0 }];
+
+            form.reset({
+                kode: "",
+                nama: "",
+                hargaJual: 0,
+                hargaBeli: 0,
+                variants: empty,
+            });
+
+            replace(empty);
+        }
+    }, [open, initialData, replace, form]);
 
 
     const onSubmit = async (values: FormBarang) => {
@@ -103,9 +102,16 @@ useEffect(() => {
             formData.append("hargaBeli", String(values.hargaBeli));
             formData.append("variants", JSON.stringify(values.variants));
 
-            await createBarang(formData);
+            if (initialData?.id) {
+                await updateBarang(initialData.id, formData)
+                toast.success("Berhasil memperbarui data");
+            } else {
 
-            toast.success("Berhasil tambah barang");
+                await createBarang(formData);
+                toast.success("Berhasil tambah barang");
+            }
+
+
             form.reset();
             onClose();
         } catch (err) {
@@ -130,6 +136,7 @@ useEffect(() => {
                             <Input {...form.register("kode")} placeholder="DH-56" />
                             {form.formState.errors.kode && <p className="text-red-500 text-sm">{form.formState.errors.kode.message}</p>}
                         </div>
+                        
                         <div>
                             <Label>Nama</Label>
                             <Input {...form.register("nama")} placeholder="Brukat Mewah Olshop" />
@@ -153,9 +160,9 @@ useEffect(() => {
                     <div>
                         <div className="flex justify-between items-center mb-3">
                             <Label>Varian / Warna</Label>
-                            <Button className="bg-[#a38adf] hover:bg-[#8b5bff]" type="button" onClick={() => append({ warna: "", stok: 0 })} size="sm">
+                           {/** <Button className="bg-[#a38adf] hover:bg-[#8b5bff]" type="button" onClick={() => append({ warna: "", stok: 0 })} size="sm">
                                 <Plus className="w-4 h-4 mr-1" /> Tambah Varian
-                            </Button>
+                            </Button> */}
                         </div>
 
                         {fields.map((field, index) => (

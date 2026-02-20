@@ -30,18 +30,16 @@ export const columns: ColumnDef<BarangColumn>[] = [
   {
     id: "nama",
     accessorKey: "nama",
-    header: "Nama Barang",
+    header: "Nama Barang",   
   },
   {
     accessorKey: "stok",
-    header: "Stok Total",
+    header: "Stok",
     cell: ({ row }) => {
-      const stok = row.original.stok;
-      return stok <= 0 ? (
-        <span className="text-red-600 font-medium">Habis</span>
-      ) : (
-        stok
-      );
+      const item = row.original;
+      if (!item.variants?.length) return item.stok ?? "—";
+      const total = item.variants.reduce((acc, v) => acc + (v.stok || 0), 0);
+      return total === 0 ? "Habis" : total;
     },
   },
   {
@@ -55,10 +53,9 @@ export const columns: ColumnDef<BarangColumn>[] = [
     cell: ({ row }) => `Rp ${row.original.hargaBeli.toLocaleString("id-ID")}`,
   },
   {
-    id: "varian",
+    id: "varianList",
     header: "Varian",
     cell: ({ row }) => {
-
       return row.original.varianList || `${row.original.varianCount} varian`;
     },
   },

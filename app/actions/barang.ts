@@ -59,7 +59,7 @@ export async function createBarang(formData: FormData) {
 
 export async function updateBarang(id: number, formData: FormData) {
     try {
-        const rawVariants = formData.get("variants") as string
+        const rawVariants = formData.get("variants") as string;
 
         const data = barangSchema.parse({
             kode: formData.get("kode"),
@@ -69,37 +69,78 @@ export async function updateBarang(id: number, formData: FormData) {
             variants: JSON.parse(rawVariants),
         });
 
-        const totalStok = data.variants.reduce(
-            (sum, v) => sum + Number(v.stok), 0
-        );
-
-        await prisma.barang.update({
-            where: { id },
-            data: {
-                kode: data.kode,
-                nama: data.nama,
-                hargaJual: data.hargaJual,
-                hargaBeli: data.hargaBeli,
-                stok: totalStok,
-
-                variants: {
-                    upsert: data.variants.map(v => ({
-                        where: { id: v.id ?? 0 },
-                        update: {
-                            warna: v.warna,
-                            stok: v.stok,
-                        },
-                        create: {
-                            warna: v.warna,
-                            stok: v.stok,
-                        },
-                    })),
-                }
-            },
+        const totalStok = data.variants.reduce((sum, v) => sum + Number(v.stok), 0);
+        
+        const existing = await prisma.varian.findMany({
+            where: { barangId: id },
+            select: { id: true, warna: true, stok: true },
         });
+
+        const existingMap = new Map(existing.map(v => [v.id, v]));
+        const operations = [];
+        
+        const keptIds = new Set<number>();
+        for (const input of data.variants) {
+            const inputStok = Number(input.stok);
+
+            if (input.id != null && existingMap.has(input.id)) {
+                // ── Update varian existing ──
+                const existingV = existingMap.get(input.id)!;
+
+                // Hanya update kalau ada perubahan (optional, tapi hemat query)
+                if (
+                    existingV.warna !== input.warna ||
+                    existingV.stok !== inputStok                ) {
+                    operations.push(
+                        prisma.varian.update({
+                            where: { id: input.id },
+                            data: {
+                                warna: input.warna,
+                                stok: inputStok,
+                            },
+                        })
+                    );
+                }
+
+                keptIds.add(input.id);
+            } else {
+                operations.push(
+                    prisma.varian.create({
+                        data: {
+                            warna: input.warna,
+                            stok: inputStok,
+                            barangId: id,
+                        },
+                    })
+                );
+            }
+        }
+        for (const old of existing) {
+            if (!keptIds.has(old.id)) {
+                operations.push(
+                    prisma.varian.delete({
+                        where: { id: old.id },
+                    })
+                );
+            }
+        }
+        await prisma.$transaction([
+            prisma.barang.update({
+                where: { id },
+                data: {
+                    kode: data.kode,
+                    nama: data.nama,
+                    hargaJual: data.hargaJual,
+                    hargaBeli: data.hargaBeli,
+                    stok: totalStok,
+                },
+            }),
+            ...operations,
+        ]);
+
         revalidatePath("/databarang");
     } catch (error) {
-        console.error("Database Error:", error);
-        throw new Error("Gagal membuat barang");
+        console.error("Update Barang Error:", error);
+        throw new Error("Gagal memperbarui barang");
     }
 }

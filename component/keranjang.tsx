@@ -1,11 +1,18 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { KeranjangItem } from "@/types/inventory";
+import { Trash2 } from "lucide-react";
+import { useEffect } from "react";
 interface TableKeranjangProps {
-    keranjang: KeranjangItem[];
+  keranjang: KeranjangItem[];
+  handleRemoveItems: (index: number, item: KeranjangItem) => void;
 }
 
-export default function TableKeranjang({keranjang}: TableKeranjangProps) {
+export default function TableKeranjang({
+  keranjang,
+  handleRemoveItems }: TableKeranjangProps) {
+  useEffect(() => { console.log("Data keranjang", keranjang) }, [keranjang]);
   return (
     <div className="p-2 max-w-7xl mx-auto border shadow rounded bg-white">
       <h3 className="text-gray-500 text-xs font-bold mb-2">Keranjang Pembeli</h3>
@@ -36,11 +43,17 @@ export default function TableKeranjang({keranjang}: TableKeranjangProps) {
                 <td className="p-2 border text-red-500">Rp {item.totalAdmin.toLocaleString()}</td>
                 <td className="p-2 border text-green-600">Rp{item.totalZakat.toLocaleString()}</td>
                 <td className="p-2 border font-bold">Rp {item.labaBersih.toLocaleString()}</td>
+                < td className="p-2 border text-center">
+                  <Button onClick={() => handleRemoveItems(idx,item)}
+                    className="bg-red-100 text-red-600 hover:text-white hover:bg-red-500 p-1 rounded transition-colors"><Trash2
+                    size={14}
+                  /></Button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>      
+      </div>
     </div>
   );
 }

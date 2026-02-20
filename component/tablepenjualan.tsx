@@ -1,19 +1,23 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
 
 interface SalesTableProps {
   penjualanHarian: any[];
   searchKodePesanan: string;
   handleDelete:(id: number) => void;
+  handleEdit: (transaksi: any) => void;
   getColormarket: (name: string) => string;
   isLoading: boolean;
 }
 
+
 export default function TablePenjualan({ 
   penjualanHarian, searchKodePesanan,
-  handleDelete, getColormarket, isLoading
+  handleDelete, handleEdit, getColormarket, isLoading
 }: SalesTableProps) {
+  
   return (
     <div className="p-2 max-w-7xl mx-auto border shadow rounded bg-white">
       <h3 className="text-gray-500 text-xs font-bold mb-2">Data Penjualan</h3>
@@ -87,6 +91,14 @@ export default function TablePenjualan({
                     <td className="p-2 text-right">Rp {zakatTotal.toLocaleString("id-ID")}</td>
                     <td className="p-2 text-right font-bold text-green-700">Rp {labaTotal.toLocaleString("id-ID")}</td>
                     <td className="p-2 text-center">
+                      <button
+                      className="bg-[#8b5bff]/50 hover:bg-[#8b5bff] text-white transition-colors rounded p-1.5"
+                        onClick={() => 
+                          handleEdit(transaksi)}
+                        title="Edit Transaksi"
+                        disabled={isLoading}
+                        ><Edit size={16}/>
+                      </button>
                       <button
                         onClick={() => handleDelete(transaksi.id)}
                         className="bg-red-100 text-red-600 hover:bg-red-600 hover:text-white p-1.5 rounded transition-colors"

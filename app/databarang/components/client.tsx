@@ -1,11 +1,9 @@
 "use client";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { BarangColumn, columns } from "./barang-columns";
-import { DataTable } from "@/components/ui/data-table"; // reuse komponen ini
+import { DataTable } from "@/components/ui/data-table";
 import { Heading } from "@/components/ui/heading";
 import { useState } from "react";
-import Router from "next/router";
 import { Button } from "@/components/ui/button";
 import { FormBarang } from "./form-barang";
 import { CellAction } from "./cell-action";

@@ -28,6 +28,8 @@ export default function Home() {
   const [keranjang, setKeranjang] = useState<KeranjangItem[]>([]);
   const [penjualanHarian, setPenjualanHarian] = useState<any[]>([]);
   const [tanggalInput, setTanggalInput] = useState<string>("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditId] = useState<number | null>(null);
 
   const [showFormModal, setShowFormModal] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -125,8 +127,6 @@ export default function Home() {
       return;
     }
     setIsLoading(true);
-    setLoadingAction("Menyimpan transaksi...")
-
     try {
       const payload = {
         kodePesanan,
@@ -142,14 +142,22 @@ export default function Home() {
           labaBersih: item.labaBersih,
         })),
       };
+      let res;
+      if (isEditing && editingId) {
+        res = await fetch(`/api/penjualan/${editingId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        res = await fetch("/api/penjualan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
 
-      const res = await fetch("/api/penjualan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error((await res.json()).error || "Gagal simpan");
+      if (!res.ok) throw new Error((await res.json()).error || "Gagal simpan/Update");
 
       // Reset form
       setKeranjang([]);
@@ -159,13 +167,12 @@ export default function Home() {
       const data = await resHarian.json();
       setPenjualanHarian(data);
 
-      toast.success("Data berhasil disimpan!");
+      toast.success(isEditing ? "Data berhasil disimpan!" : "Transaksi disimpan");
     } catch (error) {
       console.error(error);
       toast.error("Gagal menyimpan data.");
     } finally {
       setIsLoading(false);
-      setLoadingAction("");
       closeModal();
     }
   };
@@ -284,6 +291,39 @@ export default function Home() {
     }
   };
 
+  const handleEdit = (transaksi: any) => {
+    setMarketplace(transaksi.marketplace);
+    setKodePesanan(transaksi.kodePesanan);
+    const keranjangItems: KeranjangItem[] = transaksi.items.map((it: any) => ({
+      kodePesanan: transaksi.kodePesanan,
+      kodeBarang: it.varian?.barang?.kode || it.kodeBarang || "N/A",
+      namaBarang: it.varian?.barang?.nama || it.namaBarang || "N/A",
+      warna: it.varian?.warna || it.warna ||"-",
+      jumlah: it.jumlah,
+      hargaJual: it.hargaJual,
+      hargaBeli: it.hargaBeli,
+      subtotal: it.jumlah * it.hargaJual,
+      totalBeli: it.jumlah * it.hargaBeli,
+      totalAdmin: it.totalAdmin,
+      totalZakat: it.zakat || it.totalZakat,
+      labaBersih: it.laba,
+      marketplace: transaksi.marketplace,
+      varianId: it.varian?.id || it.varianId,
+    }));
+    setKeranjang(keranjangItems);
+    setIsEditing(true);
+    setEditId(transaksi.id);
+    openModal();
+  }
+
+  const handleRemoteItems = (index: number) => {
+    if(confirm("yakin hapus item ini dari keranjang")) {
+      const newKeranjang = keranjang.filter((_, i) => i !== index);
+      setKeranjang(newKeranjang);
+      toast.success("Item dihapus dari keranjang")
+    }
+  }
+
   const getColormarket = (name: string) => {
     const n = name.toLowerCase();
     if (n.includes("shopee")) return "text-orange-500 font-bold";
@@ -389,6 +429,9 @@ export default function Home() {
 
                     {/* Form Input */}
                     <AddTransactionForm
+                      isEditing={isEditing}
+                      editingId={editingId}
+                      setIsEditing={setIsEditing}
                       marketplaces={marketplaces}
                       marketplace={marketplace}
                       setMarketplace={setMarketplace}
@@ -398,39 +441,32 @@ export default function Home() {
                       isLoading={isLoading}
                       setKeranjang={setKeranjang}
                       tanggalInput={tanggalInput}
-                      handleSimpan={() => {
-                        handleSimpan();
+                      handleSimpan={async () => {
+                        await handleSimpan();
                       }}
-                      simpanBelumBayar={() => {
-                        simpanBelumBayar();
+                      simpanBelumBayar={async () => {
+                        await simpanBelumBayar();
                       }}
                     />
 
                     {/* Tabel Keranjang - Sekarang di dalam area draggable agar ikut bergeser */}
                     <div className="border-t pt-4">
-                      <TableKeranjang keranjang={keranjang} />
+                      <TableKeranjang
+                        keranjang={keranjang}
+                        handleRemoveItems={handleRemoteItems}
+                      // handleRemoveItems={handleRemoveItems}
+                      />
                     </div>
                   </div>
                   <div className="mt-6 flex justify-end">
                     <button
                       onClick={closeModal}
-                      disabled={isLoading}
                       className="px-4 py-2 bg-gray-200 text-gray-700 text-xs font-bold hover:bg-gray-300 rounded-lg transition-all"
                     >
                       BATAL / TUTUP
                     </button>
                   </div>
                 </div>
-                {isLoading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-white/70 backdrop-blur-sm z-10">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="animate-spin h-12 w-12 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-                      <p className="text-lg font-medium text-gray-800">
-                        {loadingAction || "Sedang menyimpan..."}
-                      </p>
-                    </div>
-                  </div>
-                )}
               </div>
             </motion.div>
           </div>
@@ -443,6 +479,7 @@ export default function Home() {
           penjualanHarian={penjualanHarian}
           searchKodePesanan={searchKodePesanan}
           handleDelete={handleDelete}
+          handleEdit={handleEdit}
           getColormarket={getColormarket}
           isLoading={isLoading}
         />
