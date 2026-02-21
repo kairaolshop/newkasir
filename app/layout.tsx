@@ -5,6 +5,7 @@ import Headers from "@/component/headers/page";
 import { Toaster } from "sonner";
 import { Providers } from "@/provider/provider";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({
                 zIndex: 9999,
               }}/>
         <Headers/>
+        
         {children}
         </Providers>
       </body>

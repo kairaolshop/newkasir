@@ -343,7 +343,7 @@ export default function Home() {
     <div className="max-w-7xl mx-auto p-4">
       {/* Header */}
       <div className="bg-white rounded-lg shadow p-4 mb-4">
-        <div className="flex flex-col flex-row justify-between items-center gap-4">
+        <div className="flex flex-col flex-row flex-wrap justify-between items-center gap-4">
           <h1 className="text-2xl font-bold text-[#8b5bff]">Kasir - Transaksi Harian</h1>
           <p className="text-lg text-red-500 font-bold"><span className="px-2">Hari ini</span>
             {new Intl.DateTimeFormat("id-ID", {
@@ -357,7 +357,7 @@ export default function Home() {
             type="date"
             value={tanggalInput}
             onChange={(e) => setTanggalInput(e.target.value)}
-            className="border rounded px-3 py-2 text-sm"
+            className="border rounded px-3 py-2 text-sm md:flex md:flex-wrap"
           />
         </div>
       </div>

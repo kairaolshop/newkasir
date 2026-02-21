@@ -68,7 +68,7 @@ if (!isValidPath) {
   return null;
 }
   return (
-    <nav className={cn("flex items-center text-xs", className)}>
+    <nav className={cn("flex md:grid-2 grid items-center text-xs", className)}>
       {routes.map((route) => {
         const Icon = route.icon;
         const isLogout = route.onClick !== undefined;
@@ -94,7 +94,7 @@ if (!isValidPath) {
             key={route.href}
             href={route.href}
             className={cn(
-              "flex items-center gap-2 rounded text-xs p-2 transition-colors",
+              "flex items-center gap-2 rounded md:grid-4 grid  text-xs p-2 transition-colors",
               route.active
                 ? "bg-[#a38adf] text-white"
                 : "text-slate-600 text-sm hover:text-primary hover:bg-slate-200"
