@@ -207,7 +207,7 @@ export default function BelumBayarPage() {
         </div>
 
         {/* Tombol & Cari */}
-        <div className="flex flex-wrap gap-4 items-center justify-center">
+        <div className="flex flex-wrap gap-4 items-center ">
             
           <button onClick={simpanSudahBayar} 
           disabled={loadingType !== null}

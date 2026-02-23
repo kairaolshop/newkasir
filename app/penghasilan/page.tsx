@@ -144,8 +144,8 @@ export default function PenghasilanPage() {
   };
 
   return (
-    <div className="min-h-screen p-6 flex flex-col" >
-      <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-lg p-6 flex-1 flex flex-col">
+    <div className="p-6 max-w-7xl mx-auto flex flex-col" >
+      <div className="bg-white rounded-lg shadow-lg p-6 ">
         <h1 className="text-xl font-bold text-center mb-6 text-blue-600">
           TABEL RINGKASAN PENGHASILAN
         </h1>
@@ -158,7 +158,7 @@ export default function PenghasilanPage() {
         </div>
 
         {/* Filter Section */}
-        <div className="flex flex-wrap gap-3 mb-6 items-end border-b pb-6">
+        <div className="flex-1 flex flex-wrap gap-3 mb-6 items-end border-b pb-6">
           <div className="flex flex-col">
             <label className="text-xs font-bold mb-1">MARKETPLACE</label>
             <select
@@ -243,10 +243,6 @@ export default function PenghasilanPage() {
               </span>
             ) : ("Hapus rekap")}
           </button>
-
-          <Link href="/">
-            <button className="cursor-pointer bg-black py-2 px-4 rounded text-white font-medium">HOME</button>
-          </Link>
         </div>
 
         {/* Tabel Section */}
