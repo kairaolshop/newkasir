@@ -79,7 +79,7 @@ if (!isValidPath) {
               key={route.label}
               onClick={route.onClick}
               className={cn(
-                "flex items-center gap-2 rounded p-2 transition-colors",
+                "flex items-center rounded p-2 transition-colors",
                 "text-slate-600 hover:text-red-600 hover:bg-red-100"
               )}
             >
@@ -94,7 +94,7 @@ if (!isValidPath) {
             key={route.href}
             href={route.href}
             className={cn(
-              "flex items-center gap-2 rounded md:grid-4 grid  text-xs p-2 transition-colors",
+              "flex items-center rounded md:grid-4 grid  text-xs p-2 transition-colors",
               route.active
                 ? "bg-[#a38adf] text-white"
                 : "text-slate-600 text-sm hover:text-primary hover:bg-slate-200"
