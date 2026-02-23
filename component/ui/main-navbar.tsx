@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { Flag, Settings, Package, LogOut, ShoppingBasket, Ban, Store, AlignEndHorizontal } from "lucide-react";
+import { Flag, Settings, Package, LogOut, ShoppingBasket, Ban, Store, AlignEndHorizontal, ChartSpline, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
@@ -31,7 +31,7 @@ export function MainNav({
     href: `/penghasilan`,
     label: "Rekap Penghasilan",
     active: pathname === `/penghasilan`,
-    icon: Flag,
+    icon: ChartSpline,
   },
   {
     href: `/grafik`,
@@ -43,7 +43,7 @@ export function MainNav({
     href: `/belumbayar`,
     label: "Belum Bayar",
     active: pathname === `/belumbayar`,
-    icon: Ban,
+    icon: ShoppingBag,
   },
   {
     href: `/databarang`,
@@ -79,7 +79,7 @@ if (!isValidPath) {
               key={route.label}
               onClick={route.onClick}
               className={cn(
-                "flex items-center rounded p-2 transition-colors",
+                "flex items-center rounded p-2 gap-2 transition-colors",
                 "text-slate-600 hover:text-red-600 hover:bg-red-100"
               )}
             >
@@ -94,13 +94,13 @@ if (!isValidPath) {
             key={route.href}
             href={route.href}
             className={cn(
-              "flex items-center rounded md:grid-4 grid  text-xs p-2 transition-colors",
+              "flex items-center rounded gap-2 text-xs p-2 transition-colors",
               route.active
                 ? "bg-[#a38adf] text-white"
-                : "text-slate-600 text-sm hover:text-primary hover:bg-slate-200"
+                : "text-slate-600 hover:text-primary hover:bg-[#8b5bff] hover:text-white"
             )}
           >
-            <Icon className="w-5 h-5" />
+            <Icon className="w-5 h-5 flex-shrink-0" />
             {route.label}
           </Link>
         );
