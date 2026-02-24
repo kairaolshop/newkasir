@@ -28,11 +28,11 @@ export default function TransaksiPage() {
 
   const daftarBulan = [
     { val: "01", nama: "Januari" }, { val: "02", nama: "Februari" },
-    { val: "03", nama: "Maret" },   { val: "04", nama: "April" },
-    { val: "05", nama: "Mei" },     { val: "06", nama: "Juni" },
-    { val: "07", nama: "Juli" },    { val: "08", nama: "Agustus" },
+    { val: "03", nama: "Maret" }, { val: "04", nama: "April" },
+    { val: "05", nama: "Mei" }, { val: "06", nama: "Juni" },
+    { val: "07", nama: "Juli" }, { val: "08", nama: "Agustus" },
     { val: "09", nama: "September" }, { val: "10", nama: "Oktober" },
-    { val: "11", nama: "November" },  { val: "12", nama: "Desember" },
+    { val: "11", nama: "November" }, { val: "12", nama: "Desember" },
   ];
 
   const tahunSekarang = new Date().getFullYear();
@@ -57,7 +57,7 @@ export default function TransaksiPage() {
 
   const handleUpdateStatus = async () => {
     if (!selectedItem || !statusBaru) return alert("Pilih pesanan dan status!");
-    
+
     const res = await fetch("/api/transaksi", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -77,19 +77,19 @@ export default function TransaksiPage() {
   if (!isMounted) return null;
 
   return (
-    <div className="min-h-screen max-auto bg-stone-100 p-4 text-[11px] flex justify-center w-full">
-      <div className="max-w-7xl max-auto shadow p-6 border rounded-xl bg-white">
-      {/* PANEL KONTROL */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div className="bg-yellow-100 p-4 rounded border border-yellow-300 shadow-sm">
-           <h2 className="font-bold mb-2 uppercase text-blue-800">Koreksi Status</h2>
-           <div className="flex flex-col gap-2">
+    <div className="max-w-7xl mx-auto bg-stone-100 p-4 pb-20 text-sm flex flex-col gap-6 w-full">
+      <div className="shadow p-5 sm:p-6 border rounded-xl bg-white">
+        {/* PANEL KONTROL */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="bg-yellow-100 p-4 rounded border border-yellow-300 shadow-sm">
+            <h2 className="font-bold mb-2 uppercase text-blue-800">Koreksi Status</h2>
+            <div className="flex flex-col gap-2">
               <div className="bg-white p-2 border font-bold text-blue-600">
                 {selectedItem ? selectedItem.kodePesanan : "Pilih kode di tabel..."}
               </div>
-              <select 
-                className="p-2 border bg-white" 
-                value={statusBaru} 
+              <select
+                className="p-2 border bg-white"
+                value={statusBaru}
                 onChange={e => setStatusBaru(e.target.value)}
                 disabled={!selectedItem}
               >
@@ -98,164 +98,161 @@ export default function TransaksiPage() {
                 <option value="batal">Batal</option>
                 <option value="retur">Retur</option>
               </select>
-              <button 
+              <button
                 onClick={handleUpdateStatus}
                 className="bg-[#8b5bff] hover:bg-[#8b5bff]/70 disabled:cursor-not-allowed cursor-pointer text-white p-2 rounded disabled:bg-[#8b5bff]/50 font-bold"
                 disabled={!selectedItem || !statusBaru}
               >
                 UPDATE STATUS
               </button>
-           </div>
-        </div>
+            </div>
+          </div>
 
-        <div className="bg-yellow-100 p-4 rounded border border-yellow-300 shadow-sm">
-          <h2 className="font-bold mb-2 uppercase text-blue-800">Cari Data</h2>
-          <input 
-            placeholder="Cari Kode Pesanan..." 
-            className="w-full p-2 border mb-2 bg-white"
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-          <div className="flex gap-2">
-            <select 
-                className="flex-1 p-2 border bg-white" 
-                value={filter.bulan} 
-                onChange={e => setFilter({...filter, bulan: e.target.value})}
+          <div className="bg-yellow-100 p-4 rounded border border-yellow-300 shadow-sm">
+            <h2 className="font-bold mb-2 uppercase text-blue-800">Cari Data</h2>
+            <input
+              placeholder="Cari Kode Pesanan..."
+              className="w-full p-2 border mb-2 bg-white"
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <select
+                className="flex-1 p-2 border bg-white"
+                value={filter.bulan}
+                onChange={e => setFilter({ ...filter, bulan: e.target.value })}
               >
                 {daftarBulan.map(b => (
                   <option key={b.val} value={b.val}>{b.nama}</option>
                 ))}
               </select>
 
-              <select 
-                className="flex-1 p-2 border bg-white" 
-                value={filter.tahun} 
-                onChange={e => setFilter({...filter, tahun: e.target.value})}
+              <select
+                className="flex-1 p-2 border bg-white"
+                value={filter.tahun}
+                onChange={e => setFilter({ ...filter, tahun: e.target.value })}
               >
                 {daftarTahun.map(t => (
                   <option key={t} value={t.toString()}>{t}</option>
                 ))}
-              </select>            
+              </select>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* TABEL DENGAN GROUPING */}
-      <div className="rounded overflow-hidden border">
-        <div className="overflow-x-auto max-h-[650px]">
-          <table className="w-full border-collapse text-[11px]">
-            <thead className="bg-[#8b5bff] sticky top-0 z-20 text-white uppercase font-bold border-b">
-              <tr>
-                <th className="p-2 border-r w-10 text-center">No</th>
-                <th className="p-2 border-r ">Tanggal</th>
-                <th className="p-2 border-r ">Kode Pesanan</th>
-                <th className="p-2 border-r ">Marketplace</th>
-                <th className="p-2 border-r ">Nama Barang</th>
-                <th className="p-2 border-r text-center">Qty</th>
-                <th className="p-2 border-r text-right">Laba Bersih</th>
-                <th className="p-2 text-center">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(groupedData).length === 0 ? (
+        {/* TABEL DENGAN GROUPING */}
+        <div className="rounded overflow-hidden border">
+          <div className="overflow-x-auto max-h-[650px]">
+            <table className="w-full border-collapse text-[11px]">
+              <thead className="bg-[#8b5bff] sticky top-0 z-20 text-white uppercase font-bold border-b">
                 <tr>
-                  <td colSpan={8} className="p-4 text-center">
-                    {isValidating ? "Memuat data..." : "Tidak ada data"}
-                  </td>
+                  <th className="p-2 border-r w-10 text-center">No</th>
+                  <th className="p-2 border-r ">Tanggal</th>
+                  <th className="p-2 border-r ">Kode Pesanan</th>
+                  <th className="p-2 border-r ">Marketplace</th>
+                  <th className="p-2 border-r ">Nama Barang</th>
+                  <th className="p-2 border-r text-center">Qty</th>
+                  <th className="p-2 border-r text-right">Laba Bersih</th>
+                  <th className="p-2 text-center">Status</th>
                 </tr>
-              ) : (
-                Object.keys(groupedData).map((kode, idx) => {
-                  const items = groupedData[kode];
-                  const rowCount = items.length;
+              </thead>
+              <tbody>
+                {Object.keys(groupedData).length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="p-4 text-center">
+                      {isValidating ? "Memuat data..." : "Tidak ada data"}
+                    </td>
+                  </tr>
+                ) : (
+                  Object.keys(groupedData).map((kode, idx) => {
+                    const items = groupedData[kode];
+                    const rowCount = items.length;
 
-                  return (
-                    <Fragment key={kode}>
-                      {items.map((item, i) => (
-                        <tr
-                          key={item.id}
-                          onClick={() => setSelectedItem(item)}
-                          className={`border-b border-gray-800 transition-colors cursor-pointer ${
-                            selectedItem?.kodePesanan === kode ? "bg-[#8b5bff]/50" : "hover:bg-[#8b5bff]"
-                          }`}
-                        >
-                          {i === 0 && (
-                            <>
-                              <td rowSpan={rowCount} className="p-2 border border-gray-700 text-center align-middle">
-                                {(page - 1) * limit + idx + 1}
-                              </td>
-                              <td rowSpan={rowCount} className="p-2 border-r border-gray-700 align-middle text-center">
-                                {item.tanggal}
-                              </td>
-                              <td rowSpan={rowCount} className="p-2 border-r border-gray-700 font-bold text-blue-700 align-middle text-center">
-                                {kode}
-                              </td>
-                              <td rowSpan={rowCount} className={`p-2 border-r border-gray-700 font-bold align-middle text-center ${
-                                item.marketplace?.includes('Shopee') ? 'text-orange-500' : 'text-green-500'
-                              }`}>
-                                {item.marketplace}
-                              </td>
-                            </>
-                          )}
+                    return (
+                      <Fragment key={kode}>
+                        {items.map((item, i) => (
+                          <tr
+                            key={item.id}
+                            onClick={() => setSelectedItem(item)}
+                            className={`border-b border-gray-800 transition-colors cursor-pointer ${selectedItem?.kodePesanan === kode ? "bg-[#8b5bff]/50" : "hover:bg-[#8b5bff]"
+                              }`}
+                          >
+                            {i === 0 && (
+                              <>
+                                <td rowSpan={rowCount} className="p-2 border border-gray-700 text-center align-middle">
+                                  {(page - 1) * limit + idx + 1}
+                                </td>
+                                <td rowSpan={rowCount} className="p-2 border-r border-gray-700 align-middle text-center">
+                                  {item.tanggal}
+                                </td>
+                                <td rowSpan={rowCount} className="p-2 border-r border-gray-700 font-bold text-blue-700 align-middle text-center">
+                                  {kode}
+                                </td>
+                                <td rowSpan={rowCount} className={`p-2 border-r border-gray-700 font-bold align-middle text-center ${item.marketplace?.includes('Shopee') ? 'text-orange-500' : 'text-green-500'
+                                  }`}>
+                                  {item.marketplace}
+                                </td>
+                              </>
+                            )}
 
-                          <td className="p-2 border-r border-gray-800">
-                            {item.namaBarang}
-                          </td>
-                          <td className="p-2 border-r border-gray-800 text-center">
-                            {item.jumlah}
-                          </td>
-                          <td className="p-2 border-r border-gray-800 text-right text-green-600 font-bold">
-                            {Number(item.labaBersih || 0).toLocaleString('id-ID')}
-                          </td>
-
-                          {i === 0 && (
-                            <td rowSpan={rowCount} className="p-2 text-center align-middle">
-                              <span className={`px-2 py-0.5 rounded-sm text-[9px] font-bold uppercase ${
-                                item.status === 'dikirim' || item.status === 'terkirim' 
-                                  ? 'bg-green-600' 
-                                  : item.status === 'batal' || item.status === 'retur'
-                                    ? 'bg-red-600'
-                                    : 'bg-gray-600'
-                              }`}>
-                                {item.status || '-'}
-                              </span>
+                            <td className="p-2 border-r border-gray-800">
+                              {item.namaBarang}
                             </td>
-                          )}
-                        </tr>
-                      ))}
-                    </Fragment>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                            <td className="p-2 border-r border-gray-800 text-center">
+                              {item.jumlah}
+                            </td>
+                            <td className="p-2 border-r border-gray-800 text-right text-green-600 font-bold">
+                              {Number(item.labaBersih || 0).toLocaleString('id-ID')}
+                            </td>
 
-        {/* Pagination Controls */}
-        <div className="bg-[#8b5bff]/60 p-3 text-white flex items-center justify-between text-sm">
-          <div className="">
-            Halaman {page} {pagination.total ? `dari ${Math.ceil(pagination.total / limit)}` : ''}
-            {pagination.total ? ` (${pagination.total} entri)` : ''}
+                            {i === 0 && (
+                              <td rowSpan={rowCount} className="p-2 text-center align-middle">
+                                <span className={`px-2 py-0.5 rounded-sm text-[9px] font-bold uppercase ${item.status === 'dikirim' || item.status === 'terkirim'
+                                    ? 'bg-green-600'
+                                    : item.status === 'batal' || item.status === 'retur'
+                                      ? 'bg-red-600'
+                                      : 'bg-gray-600'
+                                  }`}>
+                                  {item.status || '-'}
+                                </span>
+                              </td>
+                            )}
+                          </tr>
+                        ))}
+                      </Fragment>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
           </div>
-          
-          <div className="flex gap-3">
-            <button
-              onClick={() => setPage(p => Math.max(1, p - 1))}
-              disabled={page === 1 || isValidating}
-              className="bg-gray-700 hover:bg-gray-600 px-4 py-1.5 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Sebelumnya
-            </button>
-            
-            <button
-              onClick={() => setPage(p => p + 1)}
-              disabled={!pagination.hasNext || isValidating}
-              className="bg-[#8b5bff] text-white hover:bg-blue-600 px-4 py-1.5 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Selanjutnya
-            </button>
+
+          {/* Pagination Controls */}
+          <div className="bg-[#8b5bff]/60 p-3 text-white flex items-center justify-between text-sm">
+            <div className="">
+              Halaman {page} {pagination.total ? `dari ${Math.ceil(pagination.total / limit)}` : ''}
+              {pagination.total ? ` (${pagination.total} entri)` : ''}
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1 || isValidating}
+                className="bg-gray-700 hover:bg-gray-600 px-4 py-1.5 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Sebelumnya
+              </button>
+
+              <button
+                onClick={() => setPage(p => p + 1)}
+                disabled={!pagination.hasNext || isValidating}
+                className="bg-[#8b5bff] text-white hover:bg-blue-600 px-4 py-1.5 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Selanjutnya
+              </button>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   );
